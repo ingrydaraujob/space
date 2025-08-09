@@ -3,7 +3,62 @@
 import pygame
 import random
 import math
+import os
 from constants import *
+
+# Variável global para armazenar as imagens
+IMAGENS = None
+
+# Carregar imagens
+def carregar_imagens():
+    """Carregar todas as imagens do jogo"""
+    global IMAGENS
+    
+    if IMAGENS is not None:
+        return IMAGENS
+    
+    imagens = {}
+    
+    try:
+        # Carregar e redimensionar imagens
+        imagens['nave'] = pygame.image.load('nave.png').convert_alpha()
+        imagens['nave'] = pygame.transform.scale(imagens['nave'], (48, 48))
+        
+        imagens['enemy'] = pygame.image.load('enemy.png').convert_alpha()
+        imagens['enemy'] = pygame.transform.scale(imagens['enemy'], (48, 48))
+        
+        imagens['tiro'] = pygame.image.load('tiro.png').convert_alpha()
+        imagens['tiro'] = pygame.transform.scale(imagens['tiro'], (8, 16))
+        
+        imagens['fogo'] = pygame.image.load('fogo.png').convert_alpha()
+        imagens['fogo'] = pygame.transform.scale(imagens['fogo'], (32, 32))
+        
+        # Tentar carregar imagem específica do boss, senão usar enemy.png modificado
+        if os.path.exists('boss.png'):
+            imagens['boss'] = pygame.image.load('boss.png').convert_alpha()
+            imagens['boss'] = pygame.transform.scale(imagens['boss'], (96, 96))
+        else:
+            # Se não houver boss.png, usar enemy.png ampliado
+            imagens['boss'] = pygame.transform.scale(imagens['enemy'], (96, 96))
+        
+        # Carregar imagem de fundo
+        if os.path.exists('fundo.jpg'):
+            imagens['fundo'] = pygame.image.load('fundo.jpg').convert()
+            # Redimensionar para o tamanho da tela
+            imagens['fundo'] = pygame.transform.scale(imagens['fundo'], (LARGURA, ALTURA))
+        elif os.path.exists('fundo.png'):
+            imagens['fundo'] = pygame.image.load('fundo.png').convert()
+            imagens['fundo'] = pygame.transform.scale(imagens['fundo'], (LARGURA, ALTURA))
+        
+        print("Imagens carregadas com sucesso!")
+        IMAGENS = imagens
+        
+    except pygame.error as e:
+        print(f"Erro ao carregar imagens: {e}")
+        print("Usando sprites programáticos como fallback")
+        IMAGENS = {}
+    
+    return IMAGENS
 
 class Particula:
     def __init__(self, x, y, cor, velocidade_x, velocidade_y, vida):
@@ -34,6 +89,24 @@ class Particula:
 
 def criar_fundo_espacial():
     """Criar fundo espacial com estrelas e nebulosas"""
+    # Tentar carregar imagens se ainda não foram carregadas
+    imagens = carregar_imagens()
+    
+    # Se a imagem de fundo foi carregada, usá-la
+    if imagens and 'fundo' in imagens:
+        # Usar a imagem de fundo real
+        fundo = imagens['fundo'].copy()
+        
+        # Opcional: Adicionar algumas estrelas por cima para efeito extra
+        for i in range(50):  # Menos estrelas já que temos uma imagem
+            x = random.randint(0, LARGURA)
+            y = random.randint(0, ALTURA)
+            brilho = random.randint(200, 255)
+            pygame.draw.circle(fundo, (brilho, brilho, brilho), (x, y), 1)
+        
+        return fundo
+    
+    # Fallback: fundo programático original
     fundo = pygame.Surface((LARGURA, ALTURA))
     
     # Gradiente espacial (do azul escuro para preto)
@@ -78,8 +151,16 @@ def criar_fundo_espacial():
     return fundo
 
 def criar_nave_jogador():
-    """Criar sprite da nave do jogador (menor)"""
-    nave = pygame.Surface((48, 48), pygame.SRCALPHA)  # Menor: 48x48 em vez de 64x64
+    """Criar sprite da nave do jogador"""
+    # Tentar carregar imagens se ainda não foram carregadas
+    imagens = carregar_imagens()
+    
+    # Se as imagens foram carregadas, usar a imagem real
+    if imagens and 'nave' in imagens:
+        return imagens['nave'].copy()
+    
+    # Fallback: sprite programático (menor)
+    nave = pygame.Surface((48, 48), pygame.SRCALPHA)
     
     # Corpo principal da nave (proporcional menor)
     pontos_corpo = [(24, 4), (6, 38), (15, 34), (24, 26), (33, 34), (42, 38)]
@@ -112,8 +193,29 @@ def criar_nave_jogador():
     return nave
 
 def criar_boss():
-    """Criar sprite do boss (menor)"""
-    boss = pygame.Surface((96, 96), pygame.SRCALPHA)  # Menor: 96x96 em vez de 128x128
+    """Criar sprite do boss"""
+    # Tentar carregar imagens se ainda não foram carregadas
+    imagens = carregar_imagens()
+    
+    # Se as imagens foram carregadas, usar a imagem real
+    if imagens and 'boss' in imagens:
+        boss_img = imagens['boss'].copy()
+        
+        # Aplicar efeitos especiais ao boss para torná-lo mais intimidador
+        # Efeito de brilho dourado/laranja
+        overlay = pygame.Surface((96, 96), pygame.SRCALPHA)
+        overlay.fill((255, 200, 0, 60))  # Dourado
+        boss_img.blit(overlay, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
+        
+        # Efeito de energia roxa nas bordas
+        overlay2 = pygame.Surface((96, 96), pygame.SRCALPHA)
+        overlay2.fill((150, 0, 255, 40))  # Roxo
+        boss_img.blit(overlay2, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
+        
+        return boss_img
+    
+    # Fallback: sprite programático (menor)
+    boss = pygame.Surface((96, 96), pygame.SRCALPHA)
     
     # Corpo principal hexagonal
     pontos_hex = []
@@ -156,8 +258,29 @@ def criar_boss():
     return boss
 
 def criar_inimigo(tipo):
-    """Criar sprite de inimigo baseado no tipo (menor)"""
-    img = pygame.Surface((48, 48), pygame.SRCALPHA)  # Menor: 48x48 em vez de 64x64
+    """Criar sprite de inimigo baseado no tipo"""
+    # Tentar carregar imagens se ainda não foram carregadas
+    imagens = carregar_imagens()
+    
+    # Se as imagens foram carregadas, usar a imagem real
+    if imagens and 'enemy' in imagens:
+        # Criar diferentes variações coloridas da imagem do inimigo
+        img = imagens['enemy'].copy()
+        
+        # Aplicar tint colorido baseado no tipo
+        overlay = pygame.Surface((48, 48), pygame.SRCALPHA)
+        if tipo == 1:
+            overlay.fill((255, 100, 100, 80))  # Vermelho
+        elif tipo == 2:
+            overlay.fill((100, 100, 255, 80))  # Azul
+        else:
+            overlay.fill((255, 100, 255, 80))  # Roxo
+        
+        img.blit(overlay, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
+        return img
+    
+    # Fallback: sprite programático (menor)
+    img = pygame.Surface((48, 48), pygame.SRCALPHA)
     
     if tipo == 1:
         # Inimigo triangular (menor)
@@ -196,6 +319,14 @@ def criar_inimigo(tipo):
 
 def criar_tiro_jogador():
     """Criar sprite do tiro do jogador"""
+    # Tentar carregar imagens se ainda não foram carregadas
+    imagens = carregar_imagens()
+    
+    # Se as imagens foram carregadas, usar a imagem real
+    if imagens and 'tiro' in imagens:
+        return imagens['tiro'].copy()
+    
+    # Fallback: sprite programático
     tiro = pygame.Surface((8, 16), pygame.SRCALPHA)
     pygame.draw.rect(tiro, VERDE_NEON, (3, 0, 2, 16))
     pygame.draw.rect(tiro, BRANCO, (3.5, 0, 1, 16))
@@ -206,6 +337,19 @@ def criar_tiro_jogador():
 
 def criar_tiro_inimigo():
     """Criar sprite do tiro do inimigo"""
+    # Tentar carregar imagens se ainda não foram carregadas
+    imagens = carregar_imagens()
+    
+    # Se as imagens foram carregadas, usar versão vermelha do tiro
+    if imagens and 'tiro' in imagens:
+        tiro = imagens['tiro'].copy()
+        # Aplicar tint vermelho
+        overlay = pygame.Surface((8, 16), pygame.SRCALPHA)
+        overlay.fill((255, 0, 0, 120))
+        tiro.blit(overlay, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
+        return tiro
+    
+    # Fallback: sprite programático
     tiro = pygame.Surface((8, 16), pygame.SRCALPHA)
     pygame.draw.rect(tiro, VERMELHO_NEON, (2, 0, 4, 16))
     pygame.draw.rect(tiro, VERMELHO, (1, 0, 6, 16))
@@ -214,6 +358,22 @@ def criar_tiro_inimigo():
 
 def criar_tiro_boss():
     """Criar sprite do tiro do boss"""
+    # Tentar carregar imagens se ainda não foram carregadas
+    imagens = carregar_imagens()
+    
+    # Se as imagens foram carregadas, usar versão especial do tiro
+    if imagens and 'tiro' in imagens:
+        # Usar tiro maior para o boss
+        tiro = pygame.transform.scale(imagens['tiro'], (12, 24))
+        
+        # Aplicar efeito laranja/dourado para diferenciá-lo
+        overlay = pygame.Surface((12, 24), pygame.SRCALPHA)
+        overlay.fill((255, 150, 0, 100))  # Laranja dourado
+        tiro.blit(overlay, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
+        
+        return tiro
+    
+    # Fallback: sprite programático
     tiro = pygame.Surface((12, 24), pygame.SRCALPHA)
     pygame.draw.rect(tiro, LARANJA_NEON, (3, 0, 6, 24))
     pygame.draw.rect(tiro, AMARELO, (4, 0, 4, 24))
@@ -222,6 +382,31 @@ def criar_tiro_boss():
     pygame.draw.rect(tiro, (255, 200, 100), (1, 0, 10, 24))
     pygame.draw.rect(tiro, (255, 255, 200), (0, 0, 12, 24))
     return tiro
+
+def criar_sprite_explosao(tamanho=32):
+    """Criar sprite de explosão usando imagem do fogo"""
+    # Tentar carregar imagens se ainda não foram carregadas
+    imagens = carregar_imagens()
+    
+    # Se as imagens foram carregadas, usar a imagem real
+    if imagens and 'fogo' in imagens:
+        explosao = imagens['fogo'].copy()
+        if tamanho != 32:
+            explosao = pygame.transform.scale(explosao, (tamanho, tamanho))
+        return explosao
+    
+    # Fallback: sprite programático de explosão
+    explosao = pygame.Surface((tamanho, tamanho), pygame.SRCALPHA)
+    centro = tamanho // 2
+    
+    # Círculos concêntricos para simular explosão
+    pygame.draw.circle(explosao, (255, 0, 0), (centro, centro), centro, 0)
+    pygame.draw.circle(explosao, (255, 100, 0), (centro, centro), int(centro * 0.8), 0)
+    pygame.draw.circle(explosao, (255, 200, 0), (centro, centro), int(centro * 0.6), 0)
+    pygame.draw.circle(explosao, (255, 255, 0), (centro, centro), int(centro * 0.4), 0)
+    pygame.draw.circle(explosao, (255, 255, 255), (centro, centro), int(centro * 0.2), 0)
+    
+    return explosao
 
 def criar_explosao(x, y, cor_base, particulas_list):
     """Criar partículas de explosão"""
