@@ -1,4 +1,4 @@
-# game_design.py - Design visual e efeitos do jogo
+# Design visual e efeitos do jogo
 
 import pygame
 import random
@@ -20,7 +20,7 @@ class Particula:
         self.y += self.velocidade_y
         self.vida -= 1
         
-        # Reduzir velocidade gradualmente
+        # Reduzir velocidade
         self.velocidade_x *= 0.98
         self.velocidade_y *= 0.98
     

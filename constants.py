@@ -1,4 +1,4 @@
-# constants.py - Configurações e constantes do jogo
+# Configurações do jogo
 
 # Configurações da tela
 LARGURA = 800
@@ -16,7 +16,7 @@ CINZA = (100, 100, 100)
 ROXO = (128, 0, 128)
 LARANJA = (255, 165, 0)
 
-# Cores espaciais e tecnológicas
+# Cores espaciais
 PRETO_ESPACIAL = (5, 10, 25)
 AZUL_NEON = (0, 255, 255)
 AZUL_ESCURO = (0, 50, 100)

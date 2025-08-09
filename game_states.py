@@ -1,25 +1,25 @@
-# game_states.py - Gerenciamento de estados e interfaces do jogo
+# interfaces do jogo
 
 import pygame
 import random
 from constants import *
 
 def mostrar_pontuacao(tela, fonte, pontuacao, x, y):
-    """Mostrar pontuação com efeito tecnológico"""
+    """Mostrar pontuação"""
     texto_sombra = fonte.render(f"PONTUAÇÃO: {pontuacao}", True, AZUL_ESCURO)
     tela.blit(texto_sombra, (x + 2, y + 2))
     texto = fonte.render(f"PONTUAÇÃO: {pontuacao}", True, AZUL_NEON)
     tela.blit(texto, (x, y))
 
 def mostrar_nivel(tela, fonte, nivel, x, y):
-    """Mostrar nível com efeito tecnológico"""
+    """Mostrar nível"""
     texto_sombra = fonte.render(f"NÍVEL: {nivel}", True, AZUL_ESCURO)
     tela.blit(texto_sombra, (x + 2, y + 2))
     texto = fonte.render(f"NÍVEL: {nivel}", True, VERDE_NEON)
     tela.blit(texto, (x, y))
 
 def mostrar_vida_boss(tela, fonte, fonte_pequena, boss_vida, nivel, x, y):
-    """Mostrar vida do boss com barra de energia"""
+    """Mostrar vida do boss """
     texto_sombra = fonte.render("ENERGIA DO BOSS:", True, (100, 0, 0))
     tela.blit(texto_sombra, (x + 2, y + 2))
     texto = fonte.render("ENERGIA DO BOSS:", True, VERMELHO_NEON)
@@ -46,10 +46,10 @@ def mostrar_vida_boss(tela, fonte, fonte_pequena, boss_vida, nivel, x, y):
     tela.blit(texto_vida, (x + barra_largura + 10, y + 32))
 
 def mostrar_menu(tela, fundo, fonte_go, fonte_media, fonte_pequena):
-    """Mostrar tela de menu futurista"""
+    """Mostrar tela de menu """
     tela.blit(fundo, (0, 0))
     
-    # Título com efeito neon
+    # Título 
     titulo_sombra = fonte_go.render("GALAXY DEFENDER", True, AZUL_ESCURO)
     tela.blit(titulo_sombra, (152, 152))
     titulo = fonte_go.render("GALAXY DEFENDER", True, AZUL_NEON)
@@ -59,7 +59,7 @@ def mostrar_menu(tela, fundo, fonte_go, fonte_media, fonte_pequena):
     subtitulo = fonte_media.render("- OPERAÇÃO ESTELAR -", True, VERDE_NEON)
     tela.blit(subtitulo, (220, 200))
     
-    # Botão de início futurista
+    # Botão de início 
     botao_rect = pygame.Rect(300, 280, 200, 60)
     
     # Efeito de brilho no botão
@@ -67,7 +67,7 @@ def mostrar_menu(tela, fundo, fonte_go, fonte_media, fonte_pequena):
     pygame.draw.rect(tela, AZUL_NEON, botao_rect)
     pygame.draw.rect(tela, BRANCO_AZULADO, botao_rect, 3)
     
-    # Detalhes tecnológicos no botão
+    # Detalhes no botão
     pygame.draw.line(tela, VERDE_NEON, (botao_rect.x + 10, botao_rect.y + 10), (botao_rect.x + 30, botao_rect.y + 10), 2)
     pygame.draw.line(tela, VERDE_NEON, (botao_rect.x + botao_rect.width - 30, botao_rect.y + 10), (botao_rect.x + botao_rect.width - 10, botao_rect.y + 10), 2)
     pygame.draw.line(tela, VERDE_NEON, (botao_rect.x + 10, botao_rect.y + botao_rect.height - 10), (botao_rect.x + 30, botao_rect.y + botao_rect.height - 10), 2)
@@ -84,12 +84,12 @@ def mostrar_menu(tela, fundo, fonte_go, fonte_media, fonte_pequena):
     info2 = fonte_pequena.render("STATUS: AGUARDANDO COMANDOS DO PILOTO", True, AMARELO)
     tela.blit(info2, (220, 400))
     
-    # Versão tecnológica
+    # Versão 
     versao = fonte_pequena.render("VERSÃO 4.0 - QUANTUM EDITION", True, ROXO_NEON)
     tela.blit(versao, (10, ALTURA - 30))
 
 def mostrar_instrucoes(tela, fundo, fonte_media, fonte_pequena):
-    """Mostrar instruções futuristas"""
+    """Mostrar instruções"""
     tela.blit(fundo, (0, 0))
     
     # Título
@@ -101,7 +101,7 @@ def mostrar_instrucoes(tela, fundo, fonte_media, fonte_pequena):
     # Linha decorativa
     pygame.draw.line(tela, AZUL_NEON, (100, 130), (700, 130), 2)
     
-    # Instruções com cores tecnológicas
+    # Instruções com cores 
     instrucoes = [
         (">> CONTROLES DA NAVE:", VERDE_NEON),
         ("   ← → : Movimentação lateral", BRANCO_AZULADO),
@@ -131,7 +131,7 @@ def mostrar_instrucoes(tela, fundo, fonte_media, fonte_pequena):
         y_pos += 25
 
 def mostrar_game_over(tela, fundo, fonte_go, fonte, pontuacao, nivel):
-    """Mostrar tela de game over futurista"""
+    """Mostrar tela de game over """
     tela.blit(fundo, (0, 0))
     
     # Efeito de glitch no texto
@@ -146,7 +146,7 @@ def mostrar_game_over(tela, fundo, fonte_go, fonte, pontuacao, nivel):
     texto_go = fonte_go.render("MISSÃO FALHOU", True, VERMELHO_NEON)
     tela.blit(texto_go, (200, 250))
     
-    # Informações com estilo tecnológico
+    # Informações 
     reiniciar_sombra = fonte.render("[ R ] - REINICIAR OPERAÇÃO", True, AZUL_ESCURO)
     tela.blit(reiniciar_sombra, (252, 352))
     reiniciar = fonte.render("[ R ] - REINICIAR OPERAÇÃO", True, VERDE_NEON)
