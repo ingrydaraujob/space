@@ -18,8 +18,9 @@ icone = pygame.Surface((32, 32))
 icone.fill((255, 255, 255))
 pygame.display.set_icon(icone)
 
-# Cores
+# Cores espaciais e tecnológicas
 PRETO = (0, 0, 0)
+PRETO_ESPACIAL = (5, 10, 25)  # Azul escuro do espaço
 BRANCO = (255, 255, 255)
 VERMELHO = (255, 0, 0)
 VERDE = (0, 255, 0)
@@ -29,14 +30,67 @@ CINZA = (100, 100, 100)
 ROXO = (128, 0, 128)
 LARANJA = (255, 165, 0)
 
-# Fundo
-fundo = pygame.Surface((largura, altura))
-fundo.fill(PRETO)
-for i in range(100):
-    x = random.randint(0, largura)
-    y = random.randint(0, altura)
-    tamanho = random.randint(1, 3)
-    pygame.draw.circle(fundo, BRANCO, (x, y), tamanho)
+# Cores tecnológicas
+AZUL_NEON = (0, 255, 255)  # Ciano brilhante
+AZUL_ESCURO = (0, 50, 100)  # Azul escuro
+VERDE_NEON = (57, 255, 20)  # Verde lime brilhante
+ROXO_NEON = (148, 0, 211)  # Roxo brilhante
+ROSA_NEON = (255, 20, 147)  # Rosa brilhante
+LARANJA_NEON = (255, 140, 0)  # Laranja brilhante
+VERMELHO_NEON = (255, 0, 100)  # Vermelho brilhante
+BRANCO_AZULADO = (200, 220, 255)  # Branco com tom azul
+
+# Fundo espacial avançado
+def criar_fundo_espacial():
+    fundo = pygame.Surface((largura, altura))
+    
+    # Gradiente espacial (do azul escuro para preto)
+    for y in range(altura):
+        intensidade = int(25 * (1 - y / altura))  # Gradiente vertical
+        cor = (intensidade // 3, intensidade // 2, intensidade)
+        pygame.draw.line(fundo, cor, (0, y), (largura, y))
+    
+    # Estrelas de diferentes tamanhos e brilhos
+    for i in range(150):
+        x = random.randint(0, largura)
+        y = random.randint(0, altura)
+        tamanho = random.randint(1, 4)
+        brilho = random.randint(150, 255)
+        
+        if tamanho == 1:
+            pygame.draw.circle(fundo, (brilho, brilho, brilho), (x, y), 1)
+        elif tamanho == 2:
+            pygame.draw.circle(fundo, (brilho, brilho, brilho), (x, y), 1)
+            pygame.draw.circle(fundo, (brilho//2, brilho//2, brilho//2), (x, y), 2)
+        elif tamanho == 3:
+            # Estrela brilhante com halo
+            pygame.draw.circle(fundo, (brilho, brilho, brilho), (x, y), 2)
+            pygame.draw.circle(fundo, (brilho//3, brilho//3, brilho//3), (x, y), 4)
+        else:
+            # Estrela muito brilhante com cruz
+            pygame.draw.circle(fundo, BRANCO, (x, y), 2)
+            pygame.draw.line(fundo, BRANCO, (x-4, y), (x+4, y), 1)
+            pygame.draw.line(fundo, BRANCO, (x, y-4), (x, y+4), 1)
+    
+    # Nebulosas distantes (círculos semi-transparentes)
+    nebulosa_surface = pygame.Surface((largura, altura), pygame.SRCALPHA)
+    for i in range(8):
+        x = random.randint(50, largura-50)
+        y = random.randint(50, altura-50)
+        raio = random.randint(30, 80)
+        cor_nebulosa = random.choice([
+            (50, 0, 100, 30),   # Roxo
+            (0, 50, 100, 30),   # Azul
+            (100, 0, 50, 30),   # Rosa
+            (0, 100, 50, 30)    # Verde
+        ])
+        pygame.draw.circle(nebulosa_surface, cor_nebulosa, (x, y), raio)
+    
+    fundo.blit(nebulosa_surface, (0, 0))
+    return fundo
+
+# Criar fundo
+fundo = criar_fundo_espacial()
 
 # Sons
 try:
@@ -47,10 +101,41 @@ try:
 except:
     print("Arquivos de som não encontrados. O jogo funcionará sem áudio.")
 
-# Jogador
-jogador_img = pygame.Surface((64, 64), pygame.SRCALPHA)
-pygame.draw.polygon(jogador_img, AZUL, [(32, 0), (0, 64), (64, 64)])
-pygame.draw.polygon(jogador_img, BRANCO, [(32, 10), (10, 54), (54, 54)], 2)
+# Nave do jogador com design tecnológico
+def criar_nave_jogador():
+    nave = pygame.Surface((64, 64), pygame.SRCALPHA)
+    
+    # Corpo principal da nave (triangular futurista)
+    pontos_corpo = [(32, 5), (8, 50), (20, 45), (32, 35), (44, 45), (56, 50)]
+    pygame.draw.polygon(nave, AZUL_NEON, pontos_corpo)
+    pygame.draw.polygon(nave, BRANCO_AZULADO, pontos_corpo, 2)
+    
+    # Cockpit (cabine do piloto)
+    pygame.draw.circle(nave, AZUL_ESCURO, (32, 25), 8)
+    pygame.draw.circle(nave, AZUL_NEON, (32, 25), 8, 2)
+    pygame.draw.circle(nave, BRANCO, (32, 23), 3)
+    
+    # Motores laterais
+    pygame.draw.rect(nave, CINZA, (15, 40, 8, 15))
+    pygame.draw.rect(nave, CINZA, (41, 40, 8, 15))
+    pygame.draw.rect(nave, AZUL_NEON, (15, 40, 8, 15), 2)
+    pygame.draw.rect(nave, AZUL_NEON, (41, 40, 8, 15), 2)
+    
+    # Propulsores (efeito de fogo azul)
+    pygame.draw.rect(nave, AZUL_NEON, (17, 55, 4, 8))
+    pygame.draw.rect(nave, AZUL_NEON, (43, 55, 4, 8))
+    pygame.draw.rect(nave, BRANCO, (18, 56, 2, 6))
+    pygame.draw.rect(nave, BRANCO, (44, 56, 2, 6))
+    
+    # Detalhes tecnológicos (luzes e linhas)
+    pygame.draw.line(nave, VERDE_NEON, (32, 8), (32, 32), 2)
+    pygame.draw.circle(nave, VERDE_NEON, (20, 20), 2)
+    pygame.draw.circle(nave, VERDE_NEON, (44, 20), 2)
+    pygame.draw.circle(nave, VERMELHO_NEON, (32, 15), 2)
+    
+    return nave
+
+jogador_img = criar_nave_jogador()
 jogador_x = 370
 jogador_y = 480
 jogador_x_mudanca = 0
@@ -65,11 +150,51 @@ inimigo_y_mudanca = []
 inimigo_vida = []  # Vida dos inimigos normais (1 hit para destruir)
 num_inimigos = 6
 
-# Boss
-boss_img = pygame.Surface((128, 128), pygame.SRCALPHA)
-pygame.draw.circle(boss_img, ROXO, (64, 64), 50)
-pygame.draw.circle(boss_img, VERMELHO, (64, 64), 55, 3)
-pygame.draw.circle(boss_img, LARANJA, (64, 64), 60, 2)
+# Boss tecnológico avançado
+def criar_boss():
+    boss = pygame.Surface((128, 128), pygame.SRCALPHA)
+    
+    # Corpo principal hexagonal
+    pontos_hex = []
+    for i in range(6):
+        angulo = i * 60 * math.pi / 180
+        x = 64 + 50 * math.cos(angulo)
+        y = 64 + 50 * math.sin(angulo)
+        pontos_hex.append((x, y))
+    
+    pygame.draw.polygon(boss, ROXO_NEON, pontos_hex)
+    pygame.draw.polygon(boss, ROSA_NEON, pontos_hex, 3)
+    
+    # Núcleo central pulsante
+    pygame.draw.circle(boss, VERMELHO_NEON, (64, 64), 25)
+    pygame.draw.circle(boss, LARANJA_NEON, (64, 64), 20)
+    pygame.draw.circle(boss, AMARELO, (64, 64), 15)
+    pygame.draw.circle(boss, BRANCO, (64, 64), 10)
+    
+    # Canhões laterais
+    for i in range(4):
+        angulo = i * 90 * math.pi / 180
+        x = 64 + 35 * math.cos(angulo)
+        y = 64 + 35 * math.sin(angulo)
+        pygame.draw.circle(boss, CINZA, (int(x), int(y)), 8)
+        pygame.draw.circle(boss, VERMELHO_NEON, (int(x), int(y)), 8, 2)
+        pygame.draw.circle(boss, LARANJA_NEON, (int(x), int(y)), 5)
+    
+    # Detalhes tecnológicos
+    for i in range(8):
+        angulo = i * 45 * math.pi / 180
+        x1 = 64 + 25 * math.cos(angulo)
+        y1 = 64 + 25 * math.sin(angulo)
+        x2 = 64 + 45 * math.cos(angulo)
+        y2 = 64 + 45 * math.sin(angulo)
+        pygame.draw.line(boss, AZUL_NEON, (x1, y1), (x2, y2), 2)
+    
+    # Escudo energético (borda externa)
+    pygame.draw.circle(boss, AZUL_NEON, (64, 64), 60, 2)
+    
+    return boss
+
+boss_img = criar_boss()
 boss_x = 336  # Centralizado (800 - 128) / 2
 boss_y = 100
 boss_x_mudanca = 3
@@ -77,9 +202,17 @@ boss_vida = 20  # Boss precisa de vários tiros para ser destruído
 boss_ativo = False
 boss_tiros_cooldown = 0
 
-# Tiros dos inimigos
-tiros_inimigos_img = pygame.Surface((8, 16), pygame.SRCALPHA)
-pygame.draw.rect(tiros_inimigos_img, VERMELHO, (0, 0, 8, 16))
+# Tiros dos inimigos com efeito plasma
+def criar_tiro_inimigo():
+    tiro = pygame.Surface((8, 16), pygame.SRCALPHA)
+    # Núcleo do tiro
+    pygame.draw.rect(tiro, VERMELHO_NEON, (2, 0, 4, 16))
+    # Brilho externo
+    pygame.draw.rect(tiro, VERMELHO, (1, 0, 6, 16))
+    pygame.draw.rect(tiro, (255, 100, 100), (0, 0, 8, 16))
+    return tiro
+
+tiros_inimigos_img = criar_tiro_inimigo()
 tiros_inimigos_x = []
 tiros_inimigos_y = []
 tiros_inimigos_velocidade = 5
@@ -87,9 +220,20 @@ tiros_inimigos_estado = []
 tiros_inimigos_cooldown = []
 max_tiros_inimigos = 3
 
-# Tiros do boss
-tiros_boss_img = pygame.Surface((12, 24), pygame.SRCALPHA)
-pygame.draw.rect(tiros_boss_img, LARANJA, (0, 0, 12, 24))
+# Tiros do boss com efeito de energia
+def criar_tiro_boss():
+    tiro = pygame.Surface((12, 24), pygame.SRCALPHA)
+    # Núcleo energético
+    pygame.draw.rect(tiro, LARANJA_NEON, (3, 0, 6, 24))
+    pygame.draw.rect(tiro, AMARELO, (4, 0, 4, 24))
+    pygame.draw.rect(tiro, BRANCO, (5, 0, 2, 24))
+    # Brilho externo
+    pygame.draw.rect(tiro, LARANJA, (2, 0, 8, 24))
+    pygame.draw.rect(tiro, (255, 200, 100), (1, 0, 10, 24))
+    pygame.draw.rect(tiro, (255, 255, 200), (0, 0, 12, 24))
+    return tiro
+
+tiros_boss_img = criar_tiro_boss()
 tiros_boss_x = []
 tiros_boss_y = []
 tiros_boss_velocidade = 7
@@ -135,11 +279,44 @@ def inicializar_inimigos(nivel):
         velocidade_base = 5
     
     for i in range(num_inimigos):
-        # Criar imagem do inimigo
+        # Criar imagem do inimigo com design tecnológico
         img = pygame.Surface((64, 64), pygame.SRCALPHA)
-        cor = (random.randint(150, 255), random.randint(0, 100), random.randint(0, 100))
-        pygame.draw.circle(img, cor, (32, 32), 20)
-        pygame.draw.circle(img, VERMELHO, (32, 32), 25, 2)
+        
+        # Escolher um tipo de inimigo aleatório
+        tipo_inimigo = random.randint(1, 3)
+        
+        if tipo_inimigo == 1:
+            # Inimigo triangular
+            pontos = [(32, 10), (10, 50), (54, 50)]
+            cor_principal = (random.randint(150, 255), random.randint(0, 100), random.randint(0, 100))
+            pygame.draw.polygon(img, cor_principal, pontos)
+            pygame.draw.polygon(img, VERMELHO_NEON, pontos, 2)
+            pygame.draw.circle(img, LARANJA_NEON, (32, 35), 5)
+            
+        elif tipo_inimigo == 2:
+            # Inimigo hexagonal
+            pontos_hex = []
+            for j in range(6):
+                angulo = j * 60 * math.pi / 180
+                x = 32 + 20 * math.cos(angulo)
+                y = 32 + 20 * math.sin(angulo)
+                pontos_hex.append((x, y))
+            cor_principal = (random.randint(100, 200), random.randint(0, 150), random.randint(100, 255))
+            pygame.draw.polygon(img, cor_principal, pontos_hex)
+            pygame.draw.polygon(img, AZUL_NEON, pontos_hex, 2)
+            pygame.draw.circle(img, ROSA_NEON, (32, 32), 8)
+            
+        else:
+            # Inimigo circular com detalhes
+            cor_principal = (random.randint(100, 255), random.randint(50, 150), random.randint(50, 200))
+            pygame.draw.circle(img, cor_principal, (32, 32), 20)
+            pygame.draw.circle(img, ROXO_NEON, (32, 32), 20, 2)
+            pygame.draw.circle(img, LARANJA_NEON, (32, 32), 10)
+            pygame.draw.circle(img, BRANCO, (32, 32), 5)
+            
+            # Detalhes laterais
+            pygame.draw.circle(img, VERDE_NEON, (15, 32), 3)
+            pygame.draw.circle(img, VERDE_NEON, (49, 32), 3)
         
         inimigo_img.append(img)
         
@@ -169,9 +346,19 @@ def inicializar_inimigos(nivel):
         tiros_inimigos_estado.append("pronto")
         tiros_inimigos_cooldown.append(random.randint(50, 200))
 
-# Tiro do jogador
-tiro_img = pygame.Surface((8, 16), pygame.SRCALPHA)
-pygame.draw.rect(tiro_img, VERDE, (0, 0, 8, 16))
+# Tiro do jogador com efeito laser
+def criar_tiro_jogador():
+    tiro = pygame.Surface((8, 16), pygame.SRCALPHA)
+    # Núcleo do laser
+    pygame.draw.rect(tiro, VERDE_NEON, (3, 0, 2, 16))
+    pygame.draw.rect(tiro, BRANCO, (3.5, 0, 1, 16))
+    # Brilho externo
+    pygame.draw.rect(tiro, VERDE, (2, 0, 4, 16))
+    pygame.draw.rect(tiro, (100, 255, 100), (1, 0, 6, 16))
+    pygame.draw.rect(tiro, (150, 255, 150), (0, 0, 8, 16))
+    return tiro
+
+tiro_img = criar_tiro_jogador()
 tiro_x = 0
 tiro_y = 480
 tiro_y_mudanca = 15  # Aumentado para tiros mais rápidos
@@ -187,10 +374,21 @@ texto_y = 10
 nivel = 1
 inimigos_restantes = num_inimigos
 
-# Texto de Game Over
-fonte_go = pygame.font.SysFont('arial', 64)
-fonte_media = pygame.font.SysFont('arial', 36)
-fonte_pequena = pygame.font.SysFont('arial', 24)
+# Fontes tecnológicas
+try:
+    # Tentar usar fontes mais tecnológicas
+    fonte = pygame.font.Font(None, 32)
+    fonte_go = pygame.font.Font(None, 64)
+    fonte_media = pygame.font.Font(None, 36)
+    fonte_pequena = pygame.font.Font(None, 24)
+    fonte_titulo = pygame.font.Font(None, 48)
+except:
+    # Fallback para fontes do sistema
+    fonte = pygame.font.SysFont('consolas', 32)  # Fonte monoespaçada
+    fonte_go = pygame.font.SysFont('consolas', 64)
+    fonte_media = pygame.font.SysFont('consolas', 36)
+    fonte_pequena = pygame.font.SysFont('consolas', 24)
+    fonte_titulo = pygame.font.SysFont('consolas', 48)
 
 # Estados do jogo
 ESTADO_MENU = 0
@@ -202,20 +400,104 @@ ESTADO_PAUSA = 5  # Estado para pausa
 ESTADO_BOSS_DERROTADO = 6  # Novo estado para quando o boss é derrotado
 estado_atual = ESTADO_MENU
 
-# Função para mostrar pontuação
+# Sistema de partículas para explosões
+particulas = []
+
+class Particula:
+    def __init__(self, x, y, cor, velocidade_x, velocidade_y, vida):
+        self.x = x
+        self.y = y
+        self.cor = cor
+        self.velocidade_x = velocidade_x
+        self.velocidade_y = velocidade_y
+        self.vida = vida
+        self.vida_max = vida
+    
+    def atualizar(self):
+        self.x += self.velocidade_x
+        self.y += self.velocidade_y
+        self.vida -= 1
+        
+        # Reduzir velocidade gradualmente
+        self.velocidade_x *= 0.98
+        self.velocidade_y *= 0.98
+    
+    def desenhar(self, tela):
+        if self.vida > 0:
+            alpha = int(255 * (self.vida / self.vida_max))
+            cor_com_alpha = (*self.cor, alpha)
+            particula_surface = pygame.Surface((4, 4), pygame.SRCALPHA)
+            pygame.draw.circle(particula_surface, cor_com_alpha, (2, 2), 2)
+            tela.blit(particula_surface, (self.x, self.y))
+
+def criar_explosao(x, y, cor_base):
+    """Criar partículas de explosão"""
+    for i in range(15):
+        velocidade_x = random.uniform(-5, 5)
+        velocidade_y = random.uniform(-5, 5)
+        vida = random.randint(20, 40)
+        cor = random.choice([cor_base, AMARELO, LARANJA_NEON, BRANCO])
+        particula = Particula(x, y, cor, velocidade_x, velocidade_y, vida)
+        particulas.append(particula)
+
+def atualizar_particulas():
+    """Atualizar e desenhar todas as partículas"""
+    global particulas
+    particulas_ativas = []
+    
+    for particula in particulas:
+        particula.atualizar()
+        if particula.vida > 0:
+            particula.desenhar(tela)
+            particulas_ativas.append(particula)
+    
+    particulas = particulas_ativas
+
+# Função para mostrar pontuação com efeito tecnológico
 def mostrar_pontuacao(x, y):
-    texto = fonte.render(f"Pontuação: {pontuacao}", True, BRANCO)
+    # Sombra/brilho
+    texto_sombra = fonte.render(f"PONTUAÇÃO: {pontuacao}", True, AZUL_ESCURO)
+    tela.blit(texto_sombra, (x + 2, y + 2))
+    # Texto principal
+    texto = fonte.render(f"PONTUAÇÃO: {pontuacao}", True, AZUL_NEON)
     tela.blit(texto, (x, y))
 
-# Função para mostrar nível
+# Função para mostrar nível com efeito tecnológico
 def mostrar_nivel(x, y):
-    texto = fonte.render(f"Nível: {nivel}", True, BRANCO)
+    # Sombra/brilho
+    texto_sombra = fonte.render(f"NÍVEL: {nivel}", True, AZUL_ESCURO)
+    tela.blit(texto_sombra, (x + 2, y + 2))
+    # Texto principal
+    texto = fonte.render(f"NÍVEL: {nivel}", True, VERDE_NEON)
     tela.blit(texto, (x, y))
 
-# Função para mostrar vida do boss
+# Função para mostrar vida do boss com barra de energia
 def mostrar_vida_boss(x, y):
-    texto = fonte.render(f"Vida do Boss: {boss_vida}", True, VERMELHO)
+    # Título
+    texto_sombra = fonte.render("ENERGIA DO BOSS:", True, (100, 0, 0))
+    tela.blit(texto_sombra, (x + 2, y + 2))
+    texto = fonte.render("ENERGIA DO BOSS:", True, VERMELHO_NEON)
     tela.blit(texto, (x, y))
+    
+    # Barra de energia
+    barra_largura = 200
+    barra_altura = 20
+    vida_maxima = 20 + (nivel // 3) * 5  # Vida máxima do boss atual
+    vida_percentual = boss_vida / vida_maxima
+    
+    # Fundo da barra
+    pygame.draw.rect(tela, CINZA, (x, y + 30, barra_largura, barra_altura))
+    pygame.draw.rect(tela, BRANCO, (x, y + 30, barra_largura, barra_altura), 2)
+    
+    # Barra de vida
+    cor_vida = VERMELHO_NEON if vida_percentual < 0.3 else LARANJA_NEON if vida_percentual < 0.6 else VERDE_NEON
+    largura_vida = int(barra_largura * vida_percentual)
+    if largura_vida > 0:
+        pygame.draw.rect(tela, cor_vida, (x, y + 30, largura_vida, barra_altura))
+    
+    # Texto da vida
+    texto_vida = fonte_pequena.render(f"{boss_vida}/{vida_maxima}", True, BRANCO)
+    tela.blit(texto_vida, (x + barra_largura + 10, y + 32))
 
 # Função para desenhar o jogador
 def jogador(x, y):
@@ -276,53 +558,105 @@ def colisao_jogador(jogador_x, jogador_y, tiro_x, tiro_y):
         return True
     return False
 
-# Função para mostrar game over
+# Função para mostrar game over futurista
 def game_over_texto():
-    texto_go = fonte_go.render("GAME OVER", True, VERMELHO)
+    # Efeito de glitch no texto
+    for i in range(3):
+        offset_x = random.randint(-2, 2)
+        offset_y = random.randint(-2, 2)
+        cor_glitch = random.choice([VERMELHO_NEON, AZUL_NEON, VERDE_NEON])
+        texto_glitch = fonte_go.render("MISSÃO FALHOU", True, cor_glitch)
+        tela.blit(texto_glitch, (200 + offset_x, 250 + offset_y))
+    
+    # Texto principal
+    texto_go = fonte_go.render("MISSÃO FALHOU", True, VERMELHO_NEON)
     tela.blit(texto_go, (200, 250))
 
-# Função para mostrar tela de menu
+# Função para mostrar tela de menu futurista
 def mostrar_menu():
     tela.blit(fundo, (0, 0))
     
-    # Título
-    titulo = fonte_go.render("SPACE SHOOTER", True, AZUL)
+    # Título com efeito neon
+    titulo_sombra = fonte_go.render("GALAXY DEFENDER", True, AZUL_ESCURO)
+    tela.blit(titulo_sombra, (152, 152))
+    titulo = fonte_go.render("GALAXY DEFENDER", True, AZUL_NEON)
     tela.blit(titulo, (150, 150))
     
-    # Botão de início
-    pygame.draw.rect(tela, AZUL, (300, 300, 200, 50))
-    pygame.draw.rect(tela, BRANCO, (300, 300, 200, 50), 2)
-    texto_botao = fonte_media.render("Começar Jogo", True, BRANCO)
-    tela.blit(texto_botao, (310, 310))
+    # Subtítulo
+    subtitulo = fonte_media.render("- OPERAÇÃO ESTELAR -", True, VERDE_NEON)
+    tela.blit(subtitulo, (220, 200))
     
-    # Versão
-    versao = fonte_pequena.render("Versão 3.0", True, BRANCO)
+    # Botão de início futurista
+    botao_rect = pygame.Rect(300, 280, 200, 60)
+    
+    # Efeito de brilho no botão
+    pygame.draw.rect(tela, AZUL_ESCURO, (botao_rect.x + 3, botao_rect.y + 3, botao_rect.width, botao_rect.height))
+    pygame.draw.rect(tela, AZUL_NEON, botao_rect)
+    pygame.draw.rect(tela, BRANCO_AZULADO, botao_rect, 3)
+    
+    # Detalhes tecnológicos no botão
+    pygame.draw.line(tela, VERDE_NEON, (botao_rect.x + 10, botao_rect.y + 10), (botao_rect.x + 30, botao_rect.y + 10), 2)
+    pygame.draw.line(tela, VERDE_NEON, (botao_rect.x + botao_rect.width - 30, botao_rect.y + 10), (botao_rect.x + botao_rect.width - 10, botao_rect.y + 10), 2)
+    pygame.draw.line(tela, VERDE_NEON, (botao_rect.x + 10, botao_rect.y + botao_rect.height - 10), (botao_rect.x + 30, botao_rect.y + botao_rect.height - 10), 2)
+    pygame.draw.line(tela, VERDE_NEON, (botao_rect.x + botao_rect.width - 30, botao_rect.y + botao_rect.height - 10), (botao_rect.x + botao_rect.width - 10, botao_rect.y + botao_rect.height - 10), 2)
+    
+    texto_botao = fonte_media.render("INICIAR MISSÃO", True, BRANCO)
+    texto_rect = texto_botao.get_rect(center=botao_rect.center)
+    tela.blit(texto_botao, texto_rect)
+    
+    # Informações adicionais
+    info1 = fonte_pequena.render(">> SISTEMA DE DEFESA PLANETÁRIA ATIVO <<", True, VERDE_NEON)
+    tela.blit(info1, (200, 380))
+    
+    info2 = fonte_pequena.render("STATUS: AGUARDANDO COMANDOS DO PILOTO", True, AMARELO)
+    tela.blit(info2, (220, 400))
+    
+    # Versão tecnológica
+    versao = fonte_pequena.render("VERSÃO 4.0 - QUANTUM EDITION", True, ROXO_NEON)
     tela.blit(versao, (10, altura - 30))
 
-# Função para mostrar instruções
+# Função para mostrar instruções futuristas
 def mostrar_instrucoes():
     tela.blit(fundo, (0, 0))
     
     # Título
-    titulo = fonte_media.render("INSTRUÇÕES", True, AMARELO)
+    titulo_sombra = fonte_media.render("BRIEFING DA MISSÃO", True, AZUL_ESCURO)
+    tela.blit(titulo_sombra, (302, 102))
+    titulo = fonte_media.render("BRIEFING DA MISSÃO", True, AMARELO)
     tela.blit(titulo, (300, 100))
     
-    # Instruções
-    instrucao1 = fonte_pequena.render("Use as setas ESQUERDA e DIREITA para mover a nave espacial.", True, BRANCO)
-    instrucao2 = fonte_pequena.render("Pressione ESPAÇO para atirar contra os inimigos.", True, BRANCO)
-    instrucao3 = fonte_pequena.render("Destrua todos os inimigos para avançar para o próximo nível.", True, BRANCO)
-    instrucao4 = fonte_pequena.render("A cada 3 níveis, você enfrentará um poderoso BOSS!", True, VERMELHO)
-    instrucao5 = fonte_pequena.render("Cuidado com os tiros dos inimigos!", True, BRANCO)
-    instrucao6 = fonte_pequena.render("Pressione P para pausar o jogo a qualquer momento.", True, BRANCO)
-    instrucao7 = fonte_pequena.render("Pressione R para começar o jogo", True, AMARELO)
+    # Linha decorativa
+    pygame.draw.line(tela, AZUL_NEON, (100, 130), (700, 130), 2)
     
-    tela.blit(instrucao1, (100, 180))
-    tela.blit(instrucao2, (100, 220))
-    tela.blit(instrucao3, (100, 260))
-    tela.blit(instrucao4, (100, 300))
-    tela.blit(instrucao5, (100, 340))
-    tela.blit(instrucao6, (100, 380))
-    tela.blit(instrucao7, (100, 450))
+    # Instruções com cores tecnológicas
+    instrucoes = [
+        (">> CONTROLES DA NAVE:", VERDE_NEON),
+        ("   ← → : Movimentação lateral", BRANCO_AZULADO),
+        ("   ESPAÇO : Disparar lasers", BRANCO_AZULADO),
+        ("", BRANCO),
+        (">> OBJETIVOS DA MISSÃO:", LARANJA_NEON),
+        ("   • Eliminar todas as ameaças hostis", BRANCO_AZULADO),
+        ("   • Avançar através dos setores galácticos", BRANCO_AZULADO),
+        ("   • Enfrentar comandantes inimigos a cada 3 setores", VERMELHO_NEON),
+        ("", BRANCO),
+        (">> SISTEMAS AUXILIARES:", ROXO_NEON),
+        ("   P : Ativar modo de pausa de emergência", BRANCO_AZULADO),
+        ("", BRANCO),
+        ("⚠ CUIDADO: Evite projéteis hostis!", VERMELHO_NEON),
+        ("", BRANCO),
+        ("[ R ] - INICIAR OPERAÇÃO", VERDE_NEON)
+    ]
+    
+    y_pos = 160
+    for texto, cor in instrucoes:
+        if texto:
+            if texto.startswith(">>"):
+                # Cabeçalhos com efeito
+                texto_sombra = fonte_pequena.render(texto, True, AZUL_ESCURO)
+                tela.blit(texto_sombra, (102, y_pos + 2))
+            rendered_text = fonte_pequena.render(texto, True, cor)
+            tela.blit(rendered_text, (100, y_pos))
+        y_pos += 25
 
 # Função para mostrar tela de próximo nível
 def mostrar_proximo_nivel():
@@ -463,8 +797,8 @@ while executando:
     click = pygame.mouse.get_pressed()
     
     if estado_atual == ESTADO_MENU:
-        # Verificar se clicou no botão de início
-        if 300 <= mouse[0] <= 500 and 300 <= mouse[1] <= 350:
+        # Verificar se clicou no botão de início (ajustado para o novo botão)
+        if 300 <= mouse[0] <= 500 and 280 <= mouse[1] <= 340:
             if click[0] == 1:
                 estado_atual = ESTADO_INSTRUCOES
     
@@ -546,6 +880,8 @@ while executando:
                         som_explosao.play()
                     except:
                         pass
+                    # Criar explosão menor no boss
+                    criar_explosao(tiro_x, tiro_y, LARANJA_NEON)
                     tiro_y = 480
                     tiro_estado = "pronto"
                     boss_vida -= 1
@@ -553,6 +889,11 @@ while executando:
                     
                     # Verificar se o boss foi derrotado
                     if boss_vida <= 0:
+                        # Explosão maior quando o boss é derrotado
+                        for j in range(3):
+                            criar_explosao(boss_x + 64 + random.randint(-30, 30), 
+                                         boss_y + 64 + random.randint(-30, 30), 
+                                         random.choice([ROXO_NEON, LARANJA_NEON, AMARELO]))
                         pontuacao += 50  # Bônus por derrotar o boss
                         estado_atual = ESTADO_BOSS_DERROTADO
             
@@ -599,6 +940,8 @@ while executando:
                             som_explosao.play()
                         except:
                             pass
+                        # Criar explosão de partículas
+                        criar_explosao(inimigo_x[i] + 32, inimigo_y[i] + 32, VERMELHO_NEON)
                         tiro_y = 480
                         tiro_estado = "pronto"
                         pontuacao += 1
@@ -645,12 +988,17 @@ while executando:
         # Desenhar jogador
         jogador(jogador_x, jogador_y)
         
+        # Atualizar e desenhar partículas
+        atualizar_particulas()
+        
         # Mostrar pontuação e nível
         mostrar_pontuacao(texto_x, texto_y)
         mostrar_nivel(texto_x, texto_y + 40)
         
-        # Mostrar dica de pausa
-        dica_pausa = fonte_pequena.render("P = Pausar", True, BRANCO)
+        # Mostrar dica de pausa futurista
+        dica_pausa_sombra = fonte_pequena.render("[ P ] - PAUSA", True, AZUL_ESCURO)
+        tela.blit(dica_pausa_sombra, (largura - 118, 12))
+        dica_pausa = fonte_pequena.render("[ P ] - PAUSA", True, VERDE_NEON)
         tela.blit(dica_pausa, (largura - 120, 10))
     
     elif estado_atual == ESTADO_GAME_OVER:
@@ -659,12 +1007,21 @@ while executando:
         
         # Mostrar game over
         game_over_texto()
-        reiniciar = fonte.render("Pressione R para reiniciar", True, BRANCO)
-        pontuacao_final = fonte.render(f"Pontuação final: {pontuacao}", True, BRANCO)
-        nivel_final = fonte.render(f"Nível alcançado: {nivel}", True, BRANCO)
         
+        # Informações com estilo tecnológico
+        reiniciar_sombra = fonte.render("[ R ] - REINICIAR OPERAÇÃO", True, AZUL_ESCURO)
+        tela.blit(reiniciar_sombra, (252, 352))
+        reiniciar = fonte.render("[ R ] - REINICIAR OPERAÇÃO", True, VERDE_NEON)
         tela.blit(reiniciar, (250, 350))
+        
+        pontuacao_final_sombra = fonte.render(f"PONTUAÇÃO FINAL: {pontuacao}", True, AZUL_ESCURO)
+        tela.blit(pontuacao_final_sombra, (252, 402))
+        pontuacao_final = fonte.render(f"PONTUAÇÃO FINAL: {pontuacao}", True, AZUL_NEON)
         tela.blit(pontuacao_final, (250, 400))
+        
+        nivel_final_sombra = fonte.render(f"SETOR ALCANÇADO: {nivel}", True, AZUL_ESCURO)
+        tela.blit(nivel_final_sombra, (252, 452))
+        nivel_final = fonte.render(f"SETOR ALCANÇADO: {nivel}", True, AMARELO)
         tela.blit(nivel_final, (250, 450))
     
     elif estado_atual == ESTADO_PROXIMO_NIVEL:
