@@ -78,119 +78,119 @@ def criar_fundo_espacial():
     return fundo
 
 def criar_nave_jogador():
-    """Criar sprite da nave do jogador"""
-    nave = pygame.Surface((64, 64), pygame.SRCALPHA)
+    """Criar sprite da nave do jogador (menor)"""
+    nave = pygame.Surface((48, 48), pygame.SRCALPHA)  # Menor: 48x48 em vez de 64x64
     
-    # Corpo principal da nave
-    pontos_corpo = [(32, 5), (8, 50), (20, 45), (32, 35), (44, 45), (56, 50)]
+    # Corpo principal da nave (proporcional menor)
+    pontos_corpo = [(24, 4), (6, 38), (15, 34), (24, 26), (33, 34), (42, 38)]
     pygame.draw.polygon(nave, AZUL_NEON, pontos_corpo)
     pygame.draw.polygon(nave, BRANCO_AZULADO, pontos_corpo, 2)
     
-    # Cockpit
-    pygame.draw.circle(nave, AZUL_ESCURO, (32, 25), 8)
-    pygame.draw.circle(nave, AZUL_NEON, (32, 25), 8, 2)
-    pygame.draw.circle(nave, BRANCO, (32, 23), 3)
+    # Cockpit (menor)
+    pygame.draw.circle(nave, AZUL_ESCURO, (24, 19), 6)
+    pygame.draw.circle(nave, AZUL_NEON, (24, 19), 6, 2)
+    pygame.draw.circle(nave, BRANCO, (24, 17), 2)
     
-    # Motores laterais
-    pygame.draw.rect(nave, CINZA, (15, 40, 8, 15))
-    pygame.draw.rect(nave, CINZA, (41, 40, 8, 15))
-    pygame.draw.rect(nave, AZUL_NEON, (15, 40, 8, 15), 2)
-    pygame.draw.rect(nave, AZUL_NEON, (41, 40, 8, 15), 2)
+    # Motores laterais (menores)
+    pygame.draw.rect(nave, CINZA, (11, 30, 6, 11))
+    pygame.draw.rect(nave, CINZA, (31, 30, 6, 11))
+    pygame.draw.rect(nave, AZUL_NEON, (11, 30, 6, 11), 2)
+    pygame.draw.rect(nave, AZUL_NEON, (31, 30, 6, 11), 2)
     
-    # Propulsores
-    pygame.draw.rect(nave, AZUL_NEON, (17, 55, 4, 8))
-    pygame.draw.rect(nave, AZUL_NEON, (43, 55, 4, 8))
-    pygame.draw.rect(nave, BRANCO, (18, 56, 2, 6))
-    pygame.draw.rect(nave, BRANCO, (44, 56, 2, 6))
+    # Propulsores (menores)
+    pygame.draw.rect(nave, AZUL_NEON, (13, 41, 3, 6))
+    pygame.draw.rect(nave, AZUL_NEON, (32, 41, 3, 6))
+    pygame.draw.rect(nave, BRANCO, (13.5, 42, 2, 4))
+    pygame.draw.rect(nave, BRANCO, (32.5, 42, 2, 4))
     
-    # Detalhes tecnológicos
-    pygame.draw.line(nave, VERDE_NEON, (32, 8), (32, 32), 2)
-    pygame.draw.circle(nave, VERDE_NEON, (20, 20), 2)
-    pygame.draw.circle(nave, VERDE_NEON, (44, 20), 2)
-    pygame.draw.circle(nave, VERMELHO_NEON, (32, 15), 2)
+    # Detalhes tecnológicos (menores)
+    pygame.draw.line(nave, VERDE_NEON, (24, 6), (24, 24), 2)
+    pygame.draw.circle(nave, VERDE_NEON, (15, 15), 1)
+    pygame.draw.circle(nave, VERDE_NEON, (33, 15), 1)
+    pygame.draw.circle(nave, VERMELHO_NEON, (24, 11), 1)
     
     return nave
 
 def criar_boss():
-    """Criar sprite do boss"""
-    boss = pygame.Surface((128, 128), pygame.SRCALPHA)
+    """Criar sprite do boss (menor)"""
+    boss = pygame.Surface((96, 96), pygame.SRCALPHA)  # Menor: 96x96 em vez de 128x128
     
     # Corpo principal hexagonal
     pontos_hex = []
     for i in range(6):
         angulo = i * 60 * math.pi / 180
-        x = 64 + 50 * math.cos(angulo)
-        y = 64 + 50 * math.sin(angulo)
+        x = 48 + 37 * math.cos(angulo)  # Centro em 48, raio 37
+        y = 48 + 37 * math.sin(angulo)
         pontos_hex.append((x, y))
     
     pygame.draw.polygon(boss, ROXO_NEON, pontos_hex)
     pygame.draw.polygon(boss, ROSA_NEON, pontos_hex, 3)
     
-    # Núcleo central
-    pygame.draw.circle(boss, VERMELHO_NEON, (64, 64), 25)
-    pygame.draw.circle(boss, LARANJA_NEON, (64, 64), 20)
-    pygame.draw.circle(boss, AMARELO, (64, 64), 15)
-    pygame.draw.circle(boss, BRANCO, (64, 64), 10)
+    # Núcleo central (menor)
+    pygame.draw.circle(boss, VERMELHO_NEON, (48, 48), 19)
+    pygame.draw.circle(boss, LARANJA_NEON, (48, 48), 15)
+    pygame.draw.circle(boss, AMARELO, (48, 48), 11)
+    pygame.draw.circle(boss, BRANCO, (48, 48), 7)
     
-    # Canhões laterais
+    # Canhões laterais (menores)
     for i in range(4):
         angulo = i * 90 * math.pi / 180
-        x = 64 + 35 * math.cos(angulo)
-        y = 64 + 35 * math.sin(angulo)
-        pygame.draw.circle(boss, CINZA, (int(x), int(y)), 8)
-        pygame.draw.circle(boss, VERMELHO_NEON, (int(x), int(y)), 8, 2)
-        pygame.draw.circle(boss, LARANJA_NEON, (int(x), int(y)), 5)
+        x = 48 + 26 * math.cos(angulo)
+        y = 48 + 26 * math.sin(angulo)
+        pygame.draw.circle(boss, CINZA, (int(x), int(y)), 6)
+        pygame.draw.circle(boss, VERMELHO_NEON, (int(x), int(y)), 6, 2)
+        pygame.draw.circle(boss, LARANJA_NEON, (int(x), int(y)), 4)
     
-    # Detalhes tecnológicos
+    # Detalhes tecnológicos (menores)
     for i in range(8):
         angulo = i * 45 * math.pi / 180
-        x1 = 64 + 25 * math.cos(angulo)
-        y1 = 64 + 25 * math.sin(angulo)
-        x2 = 64 + 45 * math.cos(angulo)
-        y2 = 64 + 45 * math.sin(angulo)
+        x1 = 48 + 19 * math.cos(angulo)
+        y1 = 48 + 19 * math.sin(angulo)
+        x2 = 48 + 34 * math.cos(angulo)
+        y2 = 48 + 34 * math.sin(angulo)
         pygame.draw.line(boss, AZUL_NEON, (x1, y1), (x2, y2), 2)
     
-    # Escudo energético
-    pygame.draw.circle(boss, AZUL_NEON, (64, 64), 60, 2)
+    # Escudo energético (menor)
+    pygame.draw.circle(boss, AZUL_NEON, (48, 48), 45, 2)
     
     return boss
 
 def criar_inimigo(tipo):
-    """Criar sprite de inimigo baseado no tipo"""
-    img = pygame.Surface((64, 64), pygame.SRCALPHA)
+    """Criar sprite de inimigo baseado no tipo (menor)"""
+    img = pygame.Surface((48, 48), pygame.SRCALPHA)  # Menor: 48x48 em vez de 64x64
     
     if tipo == 1:
-        # Inimigo triangular
-        pontos = [(32, 10), (10, 50), (54, 50)]
+        # Inimigo triangular (menor)
+        pontos = [(24, 8), (8, 38), (40, 38)]
         cor_principal = (random.randint(150, 255), random.randint(0, 100), random.randint(0, 100))
         pygame.draw.polygon(img, cor_principal, pontos)
         pygame.draw.polygon(img, VERMELHO_NEON, pontos, 2)
-        pygame.draw.circle(img, LARANJA_NEON, (32, 35), 5)
+        pygame.draw.circle(img, LARANJA_NEON, (24, 26), 4)
         
     elif tipo == 2:
-        # Inimigo hexagonal
+        # Inimigo hexagonal (menor)
         pontos_hex = []
         for j in range(6):
             angulo = j * 60 * math.pi / 180
-            x = 32 + 20 * math.cos(angulo)
-            y = 32 + 20 * math.sin(angulo)
+            x = 24 + 15 * math.cos(angulo)  # Centro em 24, raio 15
+            y = 24 + 15 * math.sin(angulo)
             pontos_hex.append((x, y))
         cor_principal = (random.randint(100, 200), random.randint(0, 150), random.randint(100, 255))
         pygame.draw.polygon(img, cor_principal, pontos_hex)
         pygame.draw.polygon(img, AZUL_NEON, pontos_hex, 2)
-        pygame.draw.circle(img, ROSA_NEON, (32, 32), 8)
+        pygame.draw.circle(img, ROSA_NEON, (24, 24), 6)
         
     else:
-        # Inimigo circular
+        # Inimigo circular (menor)
         cor_principal = (random.randint(100, 255), random.randint(50, 150), random.randint(50, 200))
-        pygame.draw.circle(img, cor_principal, (32, 32), 20)
-        pygame.draw.circle(img, ROXO_NEON, (32, 32), 20, 2)
-        pygame.draw.circle(img, LARANJA_NEON, (32, 32), 10)
-        pygame.draw.circle(img, BRANCO, (32, 32), 5)
+        pygame.draw.circle(img, cor_principal, (24, 24), 15)
+        pygame.draw.circle(img, ROXO_NEON, (24, 24), 15, 2)
+        pygame.draw.circle(img, LARANJA_NEON, (24, 24), 7)
+        pygame.draw.circle(img, BRANCO, (24, 24), 3)
         
-        # Detalhes laterais
-        pygame.draw.circle(img, VERDE_NEON, (15, 32), 3)
-        pygame.draw.circle(img, VERDE_NEON, (49, 32), 3)
+        # Detalhes laterais (menores)
+        pygame.draw.circle(img, VERDE_NEON, (11, 24), 2)
+        pygame.draw.circle(img, VERDE_NEON, (37, 24), 2)
     
     return img
 

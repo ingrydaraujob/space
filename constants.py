@@ -42,11 +42,11 @@ JOGADOR_X_INICIAL = 370
 JOGADOR_Y_INICIAL = 480
 
 # Configurações dos tiros
-TIRO_VELOCIDADE = 15
-MAX_TIROS_INIMIGOS = 3
-MAX_TIROS_BOSS = 5
-TIROS_INIMIGOS_VELOCIDADE = 5
-TIROS_BOSS_VELOCIDADE = 7
+TIRO_VELOCIDADE = 25          # Tiro do jogador mais rápido (era 15)
+MAX_TIROS_INIMIGOS = 8        # Mais tiros dos inimigos (era 3)
+MAX_TIROS_BOSS = 10           # Mais tiros do boss (era 5)
+TIROS_INIMIGOS_VELOCIDADE = 12  # Tiros dos inimigos mais rápidos (era 5)
+TIROS_BOSS_VELOCIDADE = 15      # Tiros do boss mais rápidos (era 7)
 
 # Configurações dos inimigos
 NUM_INIMIGOS_BASE = 6
@@ -55,7 +55,7 @@ MAX_INIMIGOS = 15
 # Configurações do boss
 BOSS_VIDA_BASE = 20
 BOSS_VELOCIDADE = 3
-BOSS_COOLDOWN_TIROS = 30
+BOSS_COOLDOWN_TIROS = 15       # Boss atira mais frequentemente (era 30)
 
 # Configurações de partículas
 PARTICULAS_POR_EXPLOSAO = 15
