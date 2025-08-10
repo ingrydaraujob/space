@@ -33,12 +33,12 @@ def carregar_imagens():
         imagens['fogo'] = pygame.image.load('fogo.png').convert_alpha()
         imagens['fogo'] = pygame.transform.scale(imagens['fogo'], (32, 32))
         
-        # Tentar carregar imagem específica do boss, senão usar enemy.png modificado
+        # carregar imagem do boss
         if os.path.exists('boss.png'):
             imagens['boss'] = pygame.image.load('boss.png').convert_alpha()
             imagens['boss'] = pygame.transform.scale(imagens['boss'], (96, 96))
         else:
-            # Se não houver boss.png, usar enemy.png ampliado
+            # Se nao houver boss.png
             imagens['boss'] = pygame.transform.scale(imagens['enemy'], (96, 96))
         
         # Carregar imagem de fundo
@@ -88,40 +88,38 @@ class Particula:
             tela.blit(particula_surface, (self.x, self.y))
 
 def criar_fundo_espacial():
-    """Criar fundo espacial minimalista e elegante"""
-    # Tentar carregar imagens se ainda não foram carregadas
+    """Criar fundo espacial"""
     imagens = carregar_imagens()
     
     # Se a imagem de fundo foi carregada, usá-la com overlay sutil
     if imagens and 'fundo' in imagens:
-        # Usar a imagem de fundo real
         fundo = imagens['fundo'].copy()
         
         # Aplicar overlay escuro para tornar mais sutil
         overlay = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
-        overlay.fill((8, 12, 20, 120))  # Escurecer um pouco
+        overlay.fill((8, 12, 20, 120))
         fundo.blit(overlay, (0, 0))
         
-        # Adicionar poucas estrelas elegantes
-        for i in range(30):  # Muito menos estrelas para look minimalista
+        # Adicionar poucas estrelas
+        for i in range(30):
             x = random.randint(0, LARGURA)
             y = random.randint(0, ALTURA)
             pygame.draw.circle(fundo, BRANCO_SUAVE, (x, y), 1)
         
         return fundo
     
-    # Fallback: fundo minimalista programático
+    # Fallback: fundo programático
     fundo = pygame.Surface((LARGURA, ALTURA))
     
-    # Gradiente suave e elegante
+    # Gradiente espacial
     for y in range(ALTURA):
         intensidade = 20 + int(15 * (1 - y / ALTURA))
         cor = (intensidade // 2, intensidade // 1.5, intensidade)
         pygame.draw.line(fundo, cor, (0, y), (LARGURA, y))
-    
-    # Poucas estrelas elegantes e bem distribuídas
+
+    # Estrelas distribuídas
     estrelas_posicoes = []
-    for i in range(80):  # Menos estrelas para visual limpo
+    for i in range(80):
         x = random.randint(50, LARGURA-50)
         y = random.randint(50, ALTURA-50)
         
@@ -130,9 +128,8 @@ def criar_fundo_espacial():
         if not muito_proximo:
             estrelas_posicoes.append((x, y))
             
-            # Estrelas simples e elegantes
             brilho = random.randint(180, 255)
-            tamanho = random.choice([1, 1, 1, 2])  # Maioria pequenas
+            tamanho = random.choice([1, 1, 1, 2])
             
             if tamanho == 1:
                 pygame.draw.circle(fundo, (brilho, brilho, brilho), (x, y), 1)
@@ -146,27 +143,26 @@ def criar_fundo_espacial():
 
 def criar_nave_jogador():
     """Criar sprite da nave do jogador"""
-    # Tentar carregar imagens se ainda não foram carregadas
     imagens = carregar_imagens()
     
     # Se as imagens foram carregadas, usar a imagem real
     if imagens and 'nave' in imagens:
         return imagens['nave'].copy()
     
-    # Fallback: sprite programático minimalista
+    # Fallback: sprite programático
     nave = pygame.Surface((48, 48), pygame.SRCALPHA)
     
-    # Corpo principal da nave - design limpo
+    # Corpo principal da nave
     pontos_corpo = [(24, 4), (6, 38), (15, 34), (24, 26), (33, 34), (42, 38)]
     pygame.draw.polygon(nave, AZUL_SUAVE, pontos_corpo)
     pygame.draw.polygon(nave, BRANCO_SUAVE, pontos_corpo, 2)
     
-    # Cockpit elegante
+    # Cockpit central
     pygame.draw.circle(nave, AZUL_ESCURO, (24, 19), 6)
     pygame.draw.circle(nave, DESTAQUE_AZUL, (24, 19), 6, 2)
     pygame.draw.circle(nave, DESTAQUE_BRANCO, (24, 17), 2)
     
-    # Motores laterais minimalistas
+    # Motores laterais
     pygame.draw.rect(nave, CINZA_MEDIO, (11, 30, 6, 11))
     pygame.draw.rect(nave, CINZA_MEDIO, (31, 30, 6, 11))
     pygame.draw.rect(nave, DESTAQUE_AZUL, (11, 30, 6, 11), 1)
@@ -186,30 +182,28 @@ def criar_nave_jogador():
 
 def criar_boss():
     """Criar sprite do boss"""
-    # Tentar carregar imagens se ainda não foram carregadas
     imagens = carregar_imagens()
     
     # Se as imagens foram carregadas, usar a imagem real
     if imagens and 'boss' in imagens:
         boss_img = imagens['boss'].copy()
         
-        # Aplicar efeitos especiais ao boss para torná-lo mais intimidador
-        # Efeito de brilho dourado/laranja
+        # Efeito de brilho dourado
         overlay = pygame.Surface((96, 96), pygame.SRCALPHA)
-        overlay.fill((255, 200, 0, 60))  # Dourado
+        overlay.fill((255, 200, 0, 60))
         boss_img.blit(overlay, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
         
-        # Efeito de energia sutil nas bordas
+        # Efeito de energia nas bordas
         overlay2 = pygame.Surface((96, 96), pygame.SRCALPHA)
-        overlay2.fill((120, 100, 150, 30))  # Roxo suave
+        overlay2.fill((120, 100, 150, 30))
         boss_img.blit(overlay2, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
         
         return boss_img
     
-    # Fallback: sprite programático minimalista
+    # Fallback: sprite programático
     boss = pygame.Surface((96, 96), pygame.SRCALPHA)
     
-    # Corpo principal hexagonal elegante
+    # Corpo hexagonal
     pontos_hex = []
     for i in range(6):
         angulo = i * 60 * math.pi / 180
@@ -220,13 +214,13 @@ def criar_boss():
     pygame.draw.polygon(boss, ROXO_SUAVE, pontos_hex)
     pygame.draw.polygon(boss, BRANCO_SUAVE, pontos_hex, 2)
     
-    # Núcleo central minimalista
+    # Núcleo central
     pygame.draw.circle(boss, CINZA_ESCURO, (48, 48), 19)
     pygame.draw.circle(boss, DESTAQUE_LARANJA, (48, 48), 15)
     pygame.draw.circle(boss, CINZA_CLARO, (48, 48), 11)
     pygame.draw.circle(boss, DESTAQUE_BRANCO, (48, 48), 7)
     
-    # Canhões laterais elegantes
+    # Canhões laterais
     for i in range(4):
         angulo = i * 90 * math.pi / 180
         x = 48 + 26 * math.cos(angulo)
@@ -235,7 +229,7 @@ def criar_boss():
         pygame.draw.circle(boss, DESTAQUE_LARANJA, (int(x), int(y)), 6, 1)
         pygame.draw.circle(boss, BRANCO_SUAVE, (int(x), int(y)), 4)
     
-    # Detalhes tecnológicos minimalistas
+    # Detalhes tecnológicos
     for i in range(8):
         angulo = i * 45 * math.pi / 180
         x1 = 48 + 19 * math.cos(angulo)
@@ -244,7 +238,7 @@ def criar_boss():
         y2 = 48 + 34 * math.sin(angulo)
         pygame.draw.line(boss, DESTAQUE_AZUL, (x1, y1), (x2, y2), 1)
     
-    # Borda elegante
+    # Borda 
     pygame.draw.circle(boss, DESTAQUE_AZUL, (48, 48), 45, 1)
     
     return boss
@@ -271,39 +265,35 @@ def criar_inimigo(tipo):
         img.blit(overlay, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
         return img
     
-    # Fallback: sprite programático (menor)
+    # Fallback: sprite programático
     img = pygame.Surface((48, 48), pygame.SRCALPHA)
     
     if tipo == 1:
-        # Inimigo triangular (menor)
+        # Inimigo triangular
         pontos = [(24, 8), (8, 38), (40, 38)]
-        cor_principal = CINZA_MEDIO
-        pygame.draw.polygon(img, cor_principal, pontos)
+        pygame.draw.polygon(img, CINZA_MEDIO, pontos)
         pygame.draw.polygon(img, DESTAQUE_VERMELHO, pontos, 2)
         pygame.draw.circle(img, DESTAQUE_AZUL, (24, 26), 3)
         
     elif tipo == 2:
-        # Inimigo hexagonal (menor)
+        # Inimigo hexagonal
         pontos_hex = []
         for j in range(6):
             angulo = j * 60 * math.pi / 180
-            x = 24 + 15 * math.cos(angulo)  # Centro em 24, raio 15
+            x = 24 + 15 * math.cos(angulo)
             y = 24 + 15 * math.sin(angulo)
             pontos_hex.append((x, y))
-        cor_principal = CINZA_MEDIO
-        pygame.draw.polygon(img, cor_principal, pontos_hex)
+        pygame.draw.polygon(img, CINZA_MEDIO, pontos_hex)
         pygame.draw.polygon(img, DESTAQUE_AZUL, pontos_hex, 2)
         pygame.draw.circle(img, AZUL_SUAVE, (24, 24), 5)
         
     else:
-        # Inimigo circular (menor)
-        cor_principal = CINZA_MEDIO
-        pygame.draw.circle(img, cor_principal, (24, 24), 15)
+        # Inimigo circular
+        pygame.draw.circle(img, CINZA_MEDIO, (24, 24), 15)
         pygame.draw.circle(img, DESTAQUE_VERMELHO, (24, 24), 15, 2)
         pygame.draw.circle(img, AZUL_SUAVE, (24, 24), 7)
         pygame.draw.circle(img, BRANCO_SUAVE, (24, 24), 3)
-        
-        # Detalhes laterais (menores)
+        # Detalhes laterais
         pygame.draw.circle(img, DESTAQUE_AZUL, (11, 24), 2)
         pygame.draw.circle(img, DESTAQUE_AZUL, (37, 24), 2)
     
@@ -311,10 +301,8 @@ def criar_inimigo(tipo):
 
 def criar_tiro_jogador():
     """Criar sprite do tiro do jogador"""
-    # Tentar carregar imagens se ainda não foram carregadas
     imagens = carregar_imagens()
     
-    # Se as imagens foram carregadas, usar a imagem real
     if imagens and 'tiro' in imagens:
         return imagens['tiro'].copy()
     
@@ -328,10 +316,8 @@ def criar_tiro_jogador():
 
 def criar_tiro_inimigo():
     """Criar sprite do tiro do inimigo"""
-    # Tentar carregar imagens se ainda não foram carregadas
     imagens = carregar_imagens()
     
-    # Se as imagens foram carregadas, usar versão vermelha do tiro
     if imagens and 'tiro' in imagens:
         tiro = imagens['tiro'].copy()
         # Aplicar tint vermelho
@@ -349,17 +335,14 @@ def criar_tiro_inimigo():
 
 def criar_tiro_boss():
     """Criar sprite do tiro do boss"""
-    # Tentar carregar imagens se ainda não foram carregadas
     imagens = carregar_imagens()
     
-    # Se as imagens foram carregadas, usar versão especial do tiro
     if imagens and 'tiro' in imagens:
-        # Usar tiro maior para o boss
         tiro = pygame.transform.scale(imagens['tiro'], (12, 24))
         
-        # Aplicar efeito laranja/dourado para diferenciá-lo
+        # Aplicar efeito laranja/dourado
         overlay = pygame.Surface((12, 24), pygame.SRCALPHA)
-        overlay.fill((255, 150, 0, 100))  # Laranja dourado
+        overlay.fill((255, 150, 0, 100))
         tiro.blit(overlay, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
         
         return tiro
@@ -375,17 +358,15 @@ def criar_tiro_boss():
 
 def criar_sprite_explosao(tamanho=32):
     """Criar sprite de explosão usando imagem do fogo"""
-    # Tentar carregar imagens se ainda não foram carregadas
     imagens = carregar_imagens()
     
-    # Se as imagens foram carregadas, usar a imagem real
     if imagens and 'fogo' in imagens:
         explosao = imagens['fogo'].copy()
         if tamanho != 32:
             explosao = pygame.transform.scale(explosao, (tamanho, tamanho))
         return explosao
     
-    # Fallback: sprite programático de explosão
+    # Fallback: sprite programático
     explosao = pygame.Surface((tamanho, tamanho), pygame.SRCALPHA)
     centro = tamanho // 2
     
