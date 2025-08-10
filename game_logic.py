@@ -273,7 +273,7 @@ class GameLogic:
                         self.som_explosao.play()
                     
                     # Criar explosão
-                    criar_explosao(self.inimigo_x[i] + 32, self.inimigo_y[i] + 32, VERMELHO_NEON, self.particulas)
+                    criar_explosao(self.inimigo_x[i] + 32, self.inimigo_y[i] + 32, DESTAQUE_VERMELHO, self.particulas)
                     
                     self.tiro_y = JOGADOR_Y_INICIAL
                     self.tiro_estado = "pronto"
@@ -291,7 +291,7 @@ class GameLogic:
                 self.som_explosao.play()
             
             # Criar explosão menor no boss
-            criar_explosao(self.tiro_x, self.tiro_y, LARANJA_NEON, self.particulas)
+            criar_explosao(self.tiro_x, self.tiro_y, DESTAQUE_LARANJA, self.particulas)
             
             self.tiro_y = JOGADOR_Y_INICIAL
             self.tiro_estado = "pronto"
@@ -304,7 +304,7 @@ class GameLogic:
                 for j in range(3):
                     criar_explosao(self.boss_x + 64 + random.randint(-30, 30), 
                                  self.boss_y + 64 + random.randint(-30, 30), 
-                                 random.choice([ROXO_NEON, LARANJA_NEON, AMARELO]), self.particulas)
+                                 random.choice([ROXO_SUAVE, DESTAQUE_LARANJA, AMARELO]), self.particulas)
                 self.pontuacao += 50
                 return True  # Boss derrotado
         

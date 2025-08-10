@@ -88,66 +88,60 @@ class Particula:
             tela.blit(particula_surface, (self.x, self.y))
 
 def criar_fundo_espacial():
-    """Criar fundo espacial com estrelas e nebulosas"""
+    """Criar fundo espacial minimalista e elegante"""
     # Tentar carregar imagens se ainda não foram carregadas
     imagens = carregar_imagens()
     
-    # Se a imagem de fundo foi carregada, usá-la
+    # Se a imagem de fundo foi carregada, usá-la com overlay sutil
     if imagens and 'fundo' in imagens:
         # Usar a imagem de fundo real
         fundo = imagens['fundo'].copy()
         
-        # Opcional: Adicionar algumas estrelas por cima para efeito extra
-        for i in range(50):  # Menos estrelas já que temos uma imagem
+        # Aplicar overlay escuro para tornar mais sutil
+        overlay = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+        overlay.fill((8, 12, 20, 120))  # Escurecer um pouco
+        fundo.blit(overlay, (0, 0))
+        
+        # Adicionar poucas estrelas elegantes
+        for i in range(30):  # Muito menos estrelas para look minimalista
             x = random.randint(0, LARGURA)
             y = random.randint(0, ALTURA)
-            brilho = random.randint(200, 255)
-            pygame.draw.circle(fundo, (brilho, brilho, brilho), (x, y), 1)
+            pygame.draw.circle(fundo, BRANCO_SUAVE, (x, y), 1)
         
         return fundo
     
-    # Fallback: fundo programático original
+    # Fallback: fundo minimalista programático
     fundo = pygame.Surface((LARGURA, ALTURA))
     
-    # Gradiente espacial (do azul escuro para preto)
+    # Gradiente suave e elegante
     for y in range(ALTURA):
-        intensidade = int(25 * (1 - y / ALTURA))
-        cor = (intensidade // 3, intensidade // 2, intensidade)
+        intensidade = 20 + int(15 * (1 - y / ALTURA))
+        cor = (intensidade // 2, intensidade // 1.5, intensidade)
         pygame.draw.line(fundo, cor, (0, y), (LARGURA, y))
     
-    # Estrelas de diferentes tamanhos e brilhos
-    for i in range(150):
-        x = random.randint(0, LARGURA)
-        y = random.randint(0, ALTURA)
-        tamanho = random.randint(1, 4)
-        brilho = random.randint(150, 255)
-        
-        if tamanho == 1:
-            pygame.draw.circle(fundo, (brilho, brilho, brilho), (x, y), 1)
-        elif tamanho == 2:
-            pygame.draw.circle(fundo, (brilho, brilho, brilho), (x, y), 1)
-            pygame.draw.circle(fundo, (brilho//2, brilho//2, brilho//2), (x, y), 2)
-        elif tamanho == 3:
-            pygame.draw.circle(fundo, (brilho, brilho, brilho), (x, y), 2)
-            pygame.draw.circle(fundo, (brilho//3, brilho//3, brilho//3), (x, y), 4)
-        else:
-            pygame.draw.circle(fundo, BRANCO, (x, y), 2)
-            pygame.draw.line(fundo, BRANCO, (x-4, y), (x+4, y), 1)
-            pygame.draw.line(fundo, BRANCO, (x, y-4), (x, y+4), 1)
-    
-    # Nebulosas distantes
-    nebulosa_surface = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
-    for i in range(8):
+    # Poucas estrelas elegantes e bem distribuídas
+    estrelas_posicoes = []
+    for i in range(80):  # Menos estrelas para visual limpo
         x = random.randint(50, LARGURA-50)
         y = random.randint(50, ALTURA-50)
-        raio = random.randint(30, 80)
-        cor_nebulosa = random.choice([
-            (50, 0, 100, 30), (0, 50, 100, 30),
-            (100, 0, 50, 30), (0, 100, 50, 30)
-        ])
-        pygame.draw.circle(nebulosa_surface, cor_nebulosa, (x, y), raio)
+        
+        # Evitar estrelas muito próximas
+        muito_proximo = any(abs(x - ex) < 30 and abs(y - ey) < 30 for ex, ey in estrelas_posicoes[-10:])
+        if not muito_proximo:
+            estrelas_posicoes.append((x, y))
+            
+            # Estrelas simples e elegantes
+            brilho = random.randint(180, 255)
+            tamanho = random.choice([1, 1, 1, 2])  # Maioria pequenas
+            
+            if tamanho == 1:
+                pygame.draw.circle(fundo, (brilho, brilho, brilho), (x, y), 1)
+            else:
+                pygame.draw.circle(fundo, BRANCO_SUAVE, (x, y), 1)
+                # Efeito de cruz sutil para estrelas maiores
+                pygame.draw.line(fundo, (brilho//2, brilho//2, brilho//2), (x-2, y), (x+2, y), 1)
+                pygame.draw.line(fundo, (brilho//2, brilho//2, brilho//2), (x, y-2), (x, y+2), 1)
     
-    fundo.blit(nebulosa_surface, (0, 0))
     return fundo
 
 def criar_nave_jogador():
@@ -159,36 +153,34 @@ def criar_nave_jogador():
     if imagens and 'nave' in imagens:
         return imagens['nave'].copy()
     
-    # Fallback: sprite programático (menor)
+    # Fallback: sprite programático minimalista
     nave = pygame.Surface((48, 48), pygame.SRCALPHA)
     
-    # Corpo principal da nave (proporcional menor)
+    # Corpo principal da nave - design limpo
     pontos_corpo = [(24, 4), (6, 38), (15, 34), (24, 26), (33, 34), (42, 38)]
-    pygame.draw.polygon(nave, AZUL_NEON, pontos_corpo)
-    pygame.draw.polygon(nave, BRANCO_AZULADO, pontos_corpo, 2)
+    pygame.draw.polygon(nave, AZUL_SUAVE, pontos_corpo)
+    pygame.draw.polygon(nave, BRANCO_SUAVE, pontos_corpo, 2)
     
-    # Cockpit (menor)
+    # Cockpit elegante
     pygame.draw.circle(nave, AZUL_ESCURO, (24, 19), 6)
-    pygame.draw.circle(nave, AZUL_NEON, (24, 19), 6, 2)
-    pygame.draw.circle(nave, BRANCO, (24, 17), 2)
+    pygame.draw.circle(nave, DESTAQUE_AZUL, (24, 19), 6, 2)
+    pygame.draw.circle(nave, DESTAQUE_BRANCO, (24, 17), 2)
     
-    # Motores laterais (menores)
-    pygame.draw.rect(nave, CINZA, (11, 30, 6, 11))
-    pygame.draw.rect(nave, CINZA, (31, 30, 6, 11))
-    pygame.draw.rect(nave, AZUL_NEON, (11, 30, 6, 11), 2)
-    pygame.draw.rect(nave, AZUL_NEON, (31, 30, 6, 11), 2)
+    # Motores laterais minimalistas
+    pygame.draw.rect(nave, CINZA_MEDIO, (11, 30, 6, 11))
+    pygame.draw.rect(nave, CINZA_MEDIO, (31, 30, 6, 11))
+    pygame.draw.rect(nave, DESTAQUE_AZUL, (11, 30, 6, 11), 1)
+    pygame.draw.rect(nave, DESTAQUE_AZUL, (31, 30, 6, 11), 1)
     
-    # Propulsores (menores)
-    pygame.draw.rect(nave, AZUL_NEON, (13, 41, 3, 6))
-    pygame.draw.rect(nave, AZUL_NEON, (32, 41, 3, 6))
-    pygame.draw.rect(nave, BRANCO, (13.5, 42, 2, 4))
-    pygame.draw.rect(nave, BRANCO, (32.5, 42, 2, 4))
+    # Propulsores suaves
+    pygame.draw.rect(nave, DESTAQUE_AZUL, (13, 41, 3, 6))
+    pygame.draw.rect(nave, DESTAQUE_AZUL, (32, 41, 3, 6))
+    pygame.draw.rect(nave, BRANCO_SUAVE, (13.5, 42, 2, 4))
+    pygame.draw.rect(nave, BRANCO_SUAVE, (32.5, 42, 2, 4))
     
-    # Detalhes tecnológicos (menores)
-    pygame.draw.line(nave, VERDE_NEON, (24, 6), (24, 24), 2)
-    pygame.draw.circle(nave, VERDE_NEON, (15, 15), 1)
-    pygame.draw.circle(nave, VERDE_NEON, (33, 15), 1)
-    pygame.draw.circle(nave, VERMELHO_NEON, (24, 11), 1)
+    # Detalhes mínimos e elegantes
+    pygame.draw.line(nave, DESTAQUE_VERDE, (24, 6), (24, 24), 1)
+    pygame.draw.circle(nave, DESTAQUE_VERDE, (24, 11), 2)
     
     return nave
 
@@ -207,53 +199,53 @@ def criar_boss():
         overlay.fill((255, 200, 0, 60))  # Dourado
         boss_img.blit(overlay, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
         
-        # Efeito de energia roxa nas bordas
+        # Efeito de energia sutil nas bordas
         overlay2 = pygame.Surface((96, 96), pygame.SRCALPHA)
-        overlay2.fill((150, 0, 255, 40))  # Roxo
+        overlay2.fill((120, 100, 150, 30))  # Roxo suave
         boss_img.blit(overlay2, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
         
         return boss_img
     
-    # Fallback: sprite programático (menor)
+    # Fallback: sprite programático minimalista
     boss = pygame.Surface((96, 96), pygame.SRCALPHA)
     
-    # Corpo principal hexagonal
+    # Corpo principal hexagonal elegante
     pontos_hex = []
     for i in range(6):
         angulo = i * 60 * math.pi / 180
-        x = 48 + 37 * math.cos(angulo)  # Centro em 48, raio 37
+        x = 48 + 37 * math.cos(angulo)
         y = 48 + 37 * math.sin(angulo)
         pontos_hex.append((x, y))
     
-    pygame.draw.polygon(boss, ROXO_NEON, pontos_hex)
-    pygame.draw.polygon(boss, ROSA_NEON, pontos_hex, 3)
+    pygame.draw.polygon(boss, ROXO_SUAVE, pontos_hex)
+    pygame.draw.polygon(boss, BRANCO_SUAVE, pontos_hex, 2)
     
-    # Núcleo central (menor)
-    pygame.draw.circle(boss, VERMELHO_NEON, (48, 48), 19)
-    pygame.draw.circle(boss, LARANJA_NEON, (48, 48), 15)
-    pygame.draw.circle(boss, AMARELO, (48, 48), 11)
-    pygame.draw.circle(boss, BRANCO, (48, 48), 7)
+    # Núcleo central minimalista
+    pygame.draw.circle(boss, CINZA_ESCURO, (48, 48), 19)
+    pygame.draw.circle(boss, DESTAQUE_LARANJA, (48, 48), 15)
+    pygame.draw.circle(boss, CINZA_CLARO, (48, 48), 11)
+    pygame.draw.circle(boss, DESTAQUE_BRANCO, (48, 48), 7)
     
-    # Canhões laterais (menores)
+    # Canhões laterais elegantes
     for i in range(4):
         angulo = i * 90 * math.pi / 180
         x = 48 + 26 * math.cos(angulo)
         y = 48 + 26 * math.sin(angulo)
-        pygame.draw.circle(boss, CINZA, (int(x), int(y)), 6)
-        pygame.draw.circle(boss, VERMELHO_NEON, (int(x), int(y)), 6, 2)
-        pygame.draw.circle(boss, LARANJA_NEON, (int(x), int(y)), 4)
+        pygame.draw.circle(boss, CINZA_MEDIO, (int(x), int(y)), 6)
+        pygame.draw.circle(boss, DESTAQUE_LARANJA, (int(x), int(y)), 6, 1)
+        pygame.draw.circle(boss, BRANCO_SUAVE, (int(x), int(y)), 4)
     
-    # Detalhes tecnológicos (menores)
+    # Detalhes tecnológicos minimalistas
     for i in range(8):
         angulo = i * 45 * math.pi / 180
         x1 = 48 + 19 * math.cos(angulo)
         y1 = 48 + 19 * math.sin(angulo)
         x2 = 48 + 34 * math.cos(angulo)
         y2 = 48 + 34 * math.sin(angulo)
-        pygame.draw.line(boss, AZUL_NEON, (x1, y1), (x2, y2), 2)
+        pygame.draw.line(boss, DESTAQUE_AZUL, (x1, y1), (x2, y2), 1)
     
-    # Escudo energético (menor)
-    pygame.draw.circle(boss, AZUL_NEON, (48, 48), 45, 2)
+    # Borda elegante
+    pygame.draw.circle(boss, DESTAQUE_AZUL, (48, 48), 45, 1)
     
     return boss
 
@@ -285,10 +277,10 @@ def criar_inimigo(tipo):
     if tipo == 1:
         # Inimigo triangular (menor)
         pontos = [(24, 8), (8, 38), (40, 38)]
-        cor_principal = (random.randint(150, 255), random.randint(0, 100), random.randint(0, 100))
+        cor_principal = CINZA_MEDIO
         pygame.draw.polygon(img, cor_principal, pontos)
-        pygame.draw.polygon(img, VERMELHO_NEON, pontos, 2)
-        pygame.draw.circle(img, LARANJA_NEON, (24, 26), 4)
+        pygame.draw.polygon(img, DESTAQUE_VERMELHO, pontos, 2)
+        pygame.draw.circle(img, DESTAQUE_AZUL, (24, 26), 3)
         
     elif tipo == 2:
         # Inimigo hexagonal (menor)
@@ -298,22 +290,22 @@ def criar_inimigo(tipo):
             x = 24 + 15 * math.cos(angulo)  # Centro em 24, raio 15
             y = 24 + 15 * math.sin(angulo)
             pontos_hex.append((x, y))
-        cor_principal = (random.randint(100, 200), random.randint(0, 150), random.randint(100, 255))
+        cor_principal = CINZA_MEDIO
         pygame.draw.polygon(img, cor_principal, pontos_hex)
-        pygame.draw.polygon(img, AZUL_NEON, pontos_hex, 2)
-        pygame.draw.circle(img, ROSA_NEON, (24, 24), 6)
+        pygame.draw.polygon(img, DESTAQUE_AZUL, pontos_hex, 2)
+        pygame.draw.circle(img, AZUL_SUAVE, (24, 24), 5)
         
     else:
         # Inimigo circular (menor)
-        cor_principal = (random.randint(100, 255), random.randint(50, 150), random.randint(50, 200))
+        cor_principal = CINZA_MEDIO
         pygame.draw.circle(img, cor_principal, (24, 24), 15)
-        pygame.draw.circle(img, ROXO_NEON, (24, 24), 15, 2)
-        pygame.draw.circle(img, LARANJA_NEON, (24, 24), 7)
-        pygame.draw.circle(img, BRANCO, (24, 24), 3)
+        pygame.draw.circle(img, DESTAQUE_VERMELHO, (24, 24), 15, 2)
+        pygame.draw.circle(img, AZUL_SUAVE, (24, 24), 7)
+        pygame.draw.circle(img, BRANCO_SUAVE, (24, 24), 3)
         
         # Detalhes laterais (menores)
-        pygame.draw.circle(img, VERDE_NEON, (11, 24), 2)
-        pygame.draw.circle(img, VERDE_NEON, (37, 24), 2)
+        pygame.draw.circle(img, DESTAQUE_AZUL, (11, 24), 2)
+        pygame.draw.circle(img, DESTAQUE_AZUL, (37, 24), 2)
     
     return img
 
@@ -328,11 +320,10 @@ def criar_tiro_jogador():
     
     # Fallback: sprite programático
     tiro = pygame.Surface((8, 16), pygame.SRCALPHA)
-    pygame.draw.rect(tiro, VERDE_NEON, (3, 0, 2, 16))
-    pygame.draw.rect(tiro, BRANCO, (3.5, 0, 1, 16))
-    pygame.draw.rect(tiro, VERDE, (2, 0, 4, 16))
-    pygame.draw.rect(tiro, (100, 255, 100), (1, 0, 6, 16))
-    pygame.draw.rect(tiro, (150, 255, 150), (0, 0, 8, 16))
+    pygame.draw.rect(tiro, DESTAQUE_AZUL, (3, 0, 2, 16))
+    pygame.draw.rect(tiro, BRANCO_SUAVE, (3.5, 0, 1, 16))
+    pygame.draw.rect(tiro, AZUL_SUAVE, (2, 0, 4, 16))
+    pygame.draw.rect(tiro, AZUL_ESCURO, (1, 0, 6, 16))
     return tiro
 
 def criar_tiro_inimigo():
@@ -351,9 +342,9 @@ def criar_tiro_inimigo():
     
     # Fallback: sprite programático
     tiro = pygame.Surface((8, 16), pygame.SRCALPHA)
-    pygame.draw.rect(tiro, VERMELHO_NEON, (2, 0, 4, 16))
+    pygame.draw.rect(tiro, DESTAQUE_VERMELHO, (2, 0, 4, 16))
     pygame.draw.rect(tiro, VERMELHO, (1, 0, 6, 16))
-    pygame.draw.rect(tiro, (255, 100, 100), (0, 0, 8, 16))
+    pygame.draw.rect(tiro, CINZA_MEDIO, (0, 0, 8, 16))
     return tiro
 
 def criar_tiro_boss():
@@ -375,12 +366,11 @@ def criar_tiro_boss():
     
     # Fallback: sprite programático
     tiro = pygame.Surface((12, 24), pygame.SRCALPHA)
-    pygame.draw.rect(tiro, LARANJA_NEON, (3, 0, 6, 24))
+    pygame.draw.rect(tiro, DESTAQUE_LARANJA, (3, 0, 6, 24))
     pygame.draw.rect(tiro, AMARELO, (4, 0, 4, 24))
-    pygame.draw.rect(tiro, BRANCO, (5, 0, 2, 24))
-    pygame.draw.rect(tiro, LARANJA, (2, 0, 8, 24))
-    pygame.draw.rect(tiro, (255, 200, 100), (1, 0, 10, 24))
-    pygame.draw.rect(tiro, (255, 255, 200), (0, 0, 12, 24))
+    pygame.draw.rect(tiro, BRANCO_SUAVE, (5, 0, 2, 24))
+    pygame.draw.rect(tiro, LARANJA_SUAVE, (2, 0, 8, 24))
+    pygame.draw.rect(tiro, CINZA_CLARO, (1, 0, 10, 24))
     return tiro
 
 def criar_sprite_explosao(tamanho=32):
@@ -414,7 +404,7 @@ def criar_explosao(x, y, cor_base, particulas_list):
         velocidade_x = random.uniform(-5, 5)
         velocidade_y = random.uniform(-5, 5)
         vida = random.randint(VIDA_PARTICULA_MIN, VIDA_PARTICULA_MAX)
-        cor = random.choice([cor_base, AMARELO, LARANJA_NEON, BRANCO])
+        cor = random.choice([cor_base, AMARELO, DESTAQUE_LARANJA, BRANCO_SUAVE])
         particula = Particula(x, y, cor, velocidade_x, velocidade_y, vida)
         particulas_list.append(particula)
 
