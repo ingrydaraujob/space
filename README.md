@@ -1,8 +1,8 @@
 # Galaxy Defender - Operação Estelar
 
-Um jogo espacial desenvolvido em Python com Pygame, agora com código modularizado e design tecnológico avançado.
+Um jogo espacial desenvolvido em Python com Pygame.
 
-## 🚀 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 space/
@@ -15,7 +15,7 @@ space/
 └── README.md           # Este arquivo
 ```
 
-## 📁 Descrição dos Módulos
+## Descrição dos Módulos
 
 ### `main.py`
 - **Responsabilidade**: Coordenação geral do jogo
@@ -26,7 +26,7 @@ space/
   - Renderização principal
 
 ### `constants.py`
-- **Responsabilidade**: Configurações e constantes
+- **Responsabilidade**: Configurações
 - **Conteúdo**:
   - Dimensões da tela
   - Cores do jogo
@@ -35,7 +35,7 @@ space/
   - Configurações de gameplay
 
 ### `game_design.py`
-- **Responsabilidade**: Todo o aspecto visual
+- **Responsabilidade**: Aspecto visual
 - **Conteúdo**:
   - Criação de sprites (nave, inimigos, boss, tiros)
   - Sistema de partículas
@@ -61,14 +61,14 @@ space/
   - Sistema de tiros
   - Controle de estado do jogo
 
-## 🎮 Como Executar
+##  Como Executar:
 
 ```bash
 cd space
 python main.py
 ```
 
-## 🎯 Vantagens da Modularização
+##  Vantagens da Modularização
 
 1. **Organização**: Cada arquivo tem uma responsabilidade específica
 2. **Manutenibilidade**: Fácil localizar e modificar funcionalidades
@@ -77,39 +77,5 @@ python main.py
 5. **Debugging**: Mais fácil encontrar e corrigir bugs
 6. **Escalabilidade**: Fácil adicionar novas funcionalidades
 
-## 🛠️ Próximos Passos para Melhorias
 
-### Para adicionar novos recursos:
-- **Novos inimigos**: Modificar `game_design.py` (função `criar_inimigo`)
-- **Novas armas**: Adicionar em `game_design.py` e `game_logic.py`
-- **Novos efeitos**: Expandir sistema de partículas em `game_design.py`
-- **Novas telas**: Adicionar funções em `game_states.py`
-
-### Para ajustar jogabilidade:
-- **Velocidades**: Modificar `constants.py`
-- **Dificuldade**: Ajustar em `game_logic.py`
-- **Cores e visual**: Modificar `constants.py` e `game_design.py`
-
-## 📝 Exemplo de Como Adicionar um Novo Inimigo
-
-1. **Em `game_design.py`**: Adicionar novo tipo na função `criar_inimigo()`
-2. **Em `game_logic.py`**: Ajustar lógica se necessário
-3. **Em `constants.py`**: Adicionar configurações específicas
-
-## 🎨 Personalização Visual
-
-Para mudar o visual do jogo, edite principalmente:
-- `constants.py` - Para cores
-- `game_design.py` - Para sprites e efeitos
-- `game_states.py` - Para interface
-
-## 🔧 Configurações
-
-Todas as configurações principais estão em `constants.py`:
-- Tamanho da tela
-- Velocidades
-- Cores
-- Configurações de gameplay
-
-Esta estrutura modular torna o jogo muito mais profissional e fácil de manter!
 

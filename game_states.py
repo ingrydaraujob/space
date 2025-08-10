@@ -5,7 +5,7 @@ import random
 from constants import *
 
 def mostrar_pontuacao(tela, fonte, pontuacao, x, y):
-    """Mostrar pontuação"""
+    """Pontuação"""
     texto_sombra = fonte.render(f"PONTUAÇÃO: {pontuacao}", True, AZUL_ESCURO)
     tela.blit(texto_sombra, (x + 2, y + 2))
     texto = fonte.render(f"PONTUAÇÃO: {pontuacao}", True, DESTAQUE_AZUL)
